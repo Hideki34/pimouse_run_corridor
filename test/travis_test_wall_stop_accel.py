@@ -8,7 +8,7 @@ from std_srvs.srv import Trigger, TriggerResponse
 class WallStopAccelTest(unittest.TestCase):
     def test_node_exist(self):
         nodes = rosnode.get_node_names()
-        self.assertIn('/wall_stop',nodes, "node does not exist")
+        self.assertIn('/wall_stop_accel',nodes, "node does not exist")
 
     def set_sensor_values(self,lf,ls,rs,rf):
         with open("/dev/rtlightsensor0","w") as f:
@@ -22,17 +22,17 @@ class WallStopAccelTest(unittest.TestCase):
         return left,right
 
     def test_io(self):
-        left, right = self.set_and_get(400,100,100,0)
+        left, right = self.set_and_get(400,100,100,0) #total: 600
         self.assertTrue(left == right == 0, "can't stop")
 
-        left, right = self.set_and_get(40,0,0,9)
+        left, right = self.set_and_get(40,0,0,9) #total: 49
         self.assertTrue(0 < left == right < 1000, "can't move again")
 
         time.sleep(5.0)
-        left, right = self.set_and_get(40,0,0,9)
+        left, right = self.set_and_get(40,0,0,9) #total: 49
         self.assertTrue(2000 < left == right, "can't accerelate")
 
-        left, right = self.set_and_get(15,0,20,15)
+        left, right = self.set_and_get(15,0,20,15) #total:50
         self.assertTrue(left == right == 0, "can't stop again")
 
 if __name__ == '__main__':
